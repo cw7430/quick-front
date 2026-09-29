@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    /* === 파일 구조 === */
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    /* === Node 환경 설정 === */
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "esModuleInterop": true,
+
+    /* === 엄격한 타입 옵션 === */
+    "noUncheckedIndexedAccess": true,
+
+    /* === 타입 빌드 === */
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    /* === 기타 === */
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

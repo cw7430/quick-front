@@ -1,0 +1,27 @@
+{
+  "name": "@repo/shared-constants",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./api": {
+      "types": "./dist/api/index.d.ts",
+      "import": "./dist/api/index.js",
+      "default": "./dist/api/index.js"
+    }
+  },
+  "dependencies": {
+    "http-status-codes": "^2.3.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+  }
+}

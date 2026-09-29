@@ -1,0 +1,33 @@
+{
+  "name": "@repo/shared-api",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./error": {
+      "types": "./dist/error/index.d.ts",
+      "import": "./dist/error/index.js",
+      "default": "./dist/error/index.js"
+    },
+    "./fetch": {
+      "types": "./dist/fetch/index.d.ts",
+      "import": "./dist/fetch/index.js",
+      "default": "./dist/fetch/index.js"
+    }
+  },
+  "dependencies": {
+    "@repo/shared-constants": "workspace:*",
+    "@repo/shared-schemas": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+  }
+}
