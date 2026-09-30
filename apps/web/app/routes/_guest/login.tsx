@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/components/ui/shadcn/card';
+import { AuthTebs } from '@/features/user/components/views/login';
 
 export default function Login() {
   return (
@@ -25,11 +26,13 @@ export default function Login() {
               Quick
             </CardTitle>
             <CardDescription className="text-base mt-2">
-              Find your perfect harmony.
+              Find your perfect harmony
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent>{/* Contents */}</CardContent>
+        <CardContent>
+          <AuthTebs />
+        </CardContent>
       </Card>
     </div>
   );
