@@ -53,16 +53,24 @@ export default function LoginForm() {
     control,
     setError,
     clearErrors,
+    subscribe,
     formState: { errors },
   } = loginForm;
 
-  const handleFormChange = () => {
-    if (errors.root) {
-      clearErrors('root');
-      clearErrors('email');
-      clearErrors('password');
-    }
-  };
+  useEffect(() => {
+    return subscribe({
+      formState: {
+        values: true,
+      },
+      callback: () => {
+        if (errors.root) {
+          clearErrors('root');
+          clearErrors('email');
+          clearErrors('password');
+        }
+      },
+    });
+  }, [subscribe, errors.root, clearErrors]);
 
   const onSubmit: SubmitHandler<NativeLoginRequestDto> = (data) => {
     fetcher.submit(
@@ -116,13 +124,7 @@ export default function LoginForm() {
 
   return (
     <Form {...loginForm}>
-      <fetcher.Form
-        method="post"
-        action="/login"
-        onSubmit={handleSubmit(onSubmit)}
-        onChange={handleFormChange}
-        className="space-y-4"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={control}
           name="email"
@@ -164,9 +166,10 @@ export default function LoginForm() {
           control={control}
           name="isAuto"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center space-x-1 space-y-0">
+            <FormItem className="flex flex-row items-center space-x-2 space-y-0">
               <FormControl>
                 <Checkbox
+                  id="isAuto"
                   checked={field.value}
                   onCheckedChange={(checked) => {
                     field.onChange(checked);
@@ -175,7 +178,12 @@ export default function LoginForm() {
                   disabled={isPending}
                 />
               </FormControl>
-              <FormLabel>Remember Me</FormLabel>
+              <FormLabel
+                htmlFor="isAuto"
+                className="cursor-pointer font-normal"
+              >
+                Remember Me
+              </FormLabel>
             </FormItem>
           )}
         />
@@ -190,9 +198,9 @@ export default function LoginForm() {
           disabled={isPending}
         >
           {isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-          '로그인'
+          로그인
         </Button>
-      </fetcher.Form>
+      </form>
     </Form>
   );
 }
