@@ -10,3 +10,9 @@ export {
 export { nativeLoginRequestSchema, type NativeLoginRequestDto } from './login';
 export { refreshRequestSchema, type RefreshRequestDto } from './refresh';
 export { logoutRequestSchema, type LogoutRequestDto } from './logout';
+export {
+  checkEmailRequestSchema,
+  registerRequestSchema,
+  type CheckEmailRequestDto,
+  type RegisterRequestDto,
+} from './register';
