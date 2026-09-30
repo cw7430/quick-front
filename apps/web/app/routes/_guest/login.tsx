@@ -1,5 +1,11 @@
+import { data } from 'react-router';
 import { Sparkles } from 'lucide-react';
+import { ApiError } from '@repo/shared-api/error';
+import { ResponseCode } from '@repo/shared-constants/api';
 
+import type { Route } from './+types/login';
+import { nativeLogin } from '@/features/user/server/actions';
+import { nativeLoginRequestSchema } from '@/features/user/schemas';
 import {
   Card,
   CardContent,
@@ -8,6 +14,46 @@ import {
   CardTitle,
 } from '@/shared/components/ui/shadcn/card';
 import { AuthTebs } from '@/features/user/components/views/login';
+
+export const action = async ({ request }: Route.ActionArgs) => {
+  const formData = await request.formData();
+
+  const parsed = nativeLoginRequestSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+    isAuto: formData.get('isAuto') === 'true',
+  });
+
+  if (!parsed.success) {
+    return data({
+      success: false as const,
+      code: ResponseCode.VALIDATION_ERROR,
+    });
+  }
+
+  try {
+    const { data: loginData, headers } = await nativeLogin(parsed.data);
+
+    return data(
+      {
+        success: true as const,
+        data: loginData,
+      },
+      {
+        headers,
+      },
+    );
+  } catch (e) {
+    if (e instanceof ApiError) {
+      return data({
+        success: false as const,
+        code: e.code,
+      });
+    }
+
+    throw e;
+  }
+};
 
 export default function Login() {
   return (
