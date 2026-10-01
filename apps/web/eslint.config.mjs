@@ -13,7 +13,7 @@ export default defineConfig([
 
   reactRefresh.configs.vite,
 
-  tanstackQuery.configs.recommended,
+  tanstackQuery.configs['flat/recommended'],
 
   {
     files: ['**/*.{ts,tsx}'],
