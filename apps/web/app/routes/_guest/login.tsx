@@ -16,11 +16,16 @@ import {
 import { AuthTebs } from '@/features/user/components/views/login';
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const body = await request.json();
+  const formData = await request.formData();
 
-  const parsed = nativeLoginRequestSchema.safeParse(body);
+  const parsed = nativeLoginRequestSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+    isAuto: formData.get('isAuto') === 'true',
+  });
 
   if (!parsed.success) {
+    console.error('Parse Error: ', parsed.error.message);
     return data({
       success: false as const,
       code: ResponseCode.VALIDATION_ERROR,

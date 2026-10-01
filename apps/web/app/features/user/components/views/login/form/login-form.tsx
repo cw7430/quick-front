@@ -80,7 +80,6 @@ export default function LoginForm() {
       {
         method: 'post',
         action: '/login',
-        encType: 'application/json',
       },
     );
   };
