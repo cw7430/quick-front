@@ -10,4 +10,8 @@ export default [
     route('login', 'routes/_guest/login.tsx'),
   ]),
   layout('routes/_user/layout.tsx', [index('routes/_user/home.tsx')]),
+  route('logout', 'routes/_api/logout.ts'),
+  route('refresh', 'routes/_api/refresh.ts'),
+  route('register', 'routes/_api/register.ts'),
+  route('check-email', 'routes/_api/check-email.ts'),
 ] satisfies RouteConfig;

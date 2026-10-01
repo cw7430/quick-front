@@ -75,9 +75,7 @@ export default function LoginForm() {
   const onSubmit: SubmitHandler<NativeLoginRequestDto> = (data) => {
     fetcher.submit(
       {
-        email: data.email,
-        password: data.password,
-        isAuto: String(data.isAuto),
+        ...data,
       },
       {
         method: 'post',

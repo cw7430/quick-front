@@ -25,6 +25,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   });
 
   if (!parsed.success) {
+    console.error('Parse Error: ', parsed.error.message);
     return data({
       success: false as const,
       code: ResponseCode.VALIDATION_ERROR,
