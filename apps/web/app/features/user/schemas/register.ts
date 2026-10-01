@@ -18,7 +18,7 @@ export const registerRequestSchema = checkEmailRequestSchema
       ),
     confirmPassword: z.string().min(1, '비밀번호 확인을 입력해주세요.'),
     nickName: z.string().min(1, '닉네임을 입력해주세요.'),
-    gender: z.enum(['MALE', 'FEMALE'], '성별을 선택하여주세요'),
+    gender: z.enum(['M', 'F'], '성별을 선택하여주세요'),
   })
   .superRefine((data, ctx) => {
     if (data.password !== data.confirmPassword) {

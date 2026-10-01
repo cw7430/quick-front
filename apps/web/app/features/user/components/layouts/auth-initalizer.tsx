@@ -7,6 +7,7 @@ import {
 } from 'react-router';
 import { useShallow } from 'zustand/shallow';
 import { toast } from 'sonner';
+import { ResponseCode } from '@repo/shared-constants/api';
 
 import type { action } from '@/routes/_api/refresh';
 import { useAppConfigStore } from '@/shared/stores';
@@ -105,9 +106,9 @@ export default function AuthInitalizer({ hasAccessToken }: Props) {
       scheduleRefresh(res.data.accessTokenExpiresAtMs);
     } else {
       switch (res.code) {
-        case 'UA':
-        case 'IT':
-        case 'ET':
+        case ResponseCode.UNAUTHORIZED.code:
+        case ResponseCode.INVALID_TOKEN.code:
+        case ResponseCode.EXPIRED_TOKEN.code:
           handleAuthFailure();
           break;
         default:

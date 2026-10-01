@@ -4,6 +4,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useShallow } from 'zustand/shallow';
 import { Loader2 } from 'lucide-react';
+import { ResponseCode } from '@repo/shared-constants/api';
 
 import type { action } from '@/routes/_guest/login';
 import { useAppConfigStore } from '@/shared/stores';
@@ -98,14 +99,14 @@ export default function LoginForm() {
     }
 
     switch (res.code) {
-      case 'LGE':
-      case 'VE':
+      case ResponseCode.LOGIN_ERROR.code:
+      case ResponseCode.VALIDATION_ERROR.code:
         setError('root', {
           type: 'server',
           message: '이메일 또는 비밀번호가 올바르지 않습니다.',
         });
         break;
-      case 'KE':
+      case ResponseCode.KEY_ERROR.code:
         setError('root', {
           type: 'server',
           message: 'API KEY가 잘못되었습니다. 관리자에게 문의하세요.',
