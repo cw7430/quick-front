@@ -9,6 +9,8 @@ import {
 
 import type { Route } from './+types/root';
 import './app.css';
+import { Toaster } from './shared/components/ui/shadcn/sonner';
+import { ReactQueryProvider } from './shared/components/layouts/dev';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -27,7 +29,7 @@ export const links: Route.LinksFunction = () => [
 export function meta({}: Route.MetaArgs) {
   return [
     { title: 'Quick Chat' },
-    { name: 'description', content: 'Quick Chat App' },
+    { name: 'description', content: '나만의 소울 매칭' },
   ];
 }
 
@@ -50,9 +52,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
-}
+  if (import.meta.env.PROD) {
+    return (
+      <>
+        <Outlet />
+        <Toaster />
+      </>
+    );
+  }
 
+  return (
+    <ReactQueryProvider>
+      <Outlet />
+      <Toaster />
+    </ReactQueryProvider>
+  );
+}
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = 'Oops!';
   let details = 'An unexpected error occurred.';

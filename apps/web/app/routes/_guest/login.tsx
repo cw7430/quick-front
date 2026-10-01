@@ -16,13 +16,9 @@ import {
 import { AuthTebs } from '@/features/user/components/views/login';
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const formData = await request.formData();
+  const body = await request.json();
 
-  const parsed = nativeLoginRequestSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-    isAuto: formData.get('isAuto') === 'true',
-  });
+  const parsed = nativeLoginRequestSchema.safeParse(body);
 
   if (!parsed.success) {
     return data({
