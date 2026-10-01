@@ -1,11 +1,16 @@
-import { useEffect } from 'react';
-import { useNavigate, useSearchParams, useFetcher } from 'react-router';
+import { useState, useEffect } from 'react';
+import {
+  useNavigate,
+  useSearchParams,
+  useFetcher,
+  useFetchers,
+} from 'react-router';
 import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { ResponseCode } from '@repo/shared-constants/api';
 
-import type { action } from '@/routes/_guest/login';
+import type { action } from '@/routes/_api/register';
 import { useAuthStore } from '@/features/user/stores';
 import {
   registerRequestSchema,
@@ -28,17 +33,25 @@ import {
   SelectContent,
 } from '@/shared/components/ui/shadcn/select';
 import { Button } from '@/shared/components/ui/shadcn/button';
+import CheckEmailButton from './check-email-button';
 
 export default function RegisterFrom() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const fetcher = useFetcher<typeof action>();
+  const fetchers = useFetchers();
+
+  const isPending = fetchers.some(
+    (f) => f.formAction === '/register' || f.formAction === '/check-email',
+  );
 
   const login = useAuthStore((s) => s.login);
 
   const redirect = searchParams.get('redirect');
 
   const redirectTo = redirect && redirect.startsWith('/') ? redirect : '/';
+
+  const [isEmailChecked, setEmailChecked] = useState<boolean>(false);
 
   const registerForm = useForm<RegisterRequestDto>({
     mode: 'onChange',
@@ -61,6 +74,7 @@ export default function RegisterFrom() {
     formState: { errors },
   } = registerForm;
 
+  const email = useWatch({ control, name: 'email' });
   const password = useWatch({ control, name: 'password' });
   const confirmPassword = useWatch({ control, name: 'confirmPassword' });
 
@@ -88,6 +102,12 @@ export default function RegisterFrom() {
   }, [subscribe, errors.root, clearErrors]);
 
   const onSubmit: SubmitHandler<RegisterRequestDto> = (data) => {
+    if (!isEmailChecked) {
+      setError('email', {
+        message: '이메일 중복체크를 해주세요',
+      });
+      return;
+    }
     fetcher.submit(
       {
         ...data,
@@ -98,8 +118,6 @@ export default function RegisterFrom() {
       },
     );
   };
-
-  const isPending = fetcher.state !== 'idle';
 
   useEffect(() => {
     const res = fetcher.data;
@@ -139,8 +157,6 @@ export default function RegisterFrom() {
     }
   }, [fetcher.data, login, navigate, redirectTo, setError]);
 
-  console.log(errors.confirmPassword);
-
   return (
     <Form {...registerForm}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -151,14 +167,35 @@ export default function RegisterFrom() {
             <FormItem>
               <FormLabel>이메일</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="hello@example.com"
-                  {...field}
-                  className="bg-secondary/50 border-white/5"
-                  disabled={isPending}
-                />
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="hello@example.com"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      setEmailChecked(false);
+                    }}
+                    className="bg-secondary/50 border-white/5"
+                    disabled={isPending}
+                  />
+                  <CheckEmailButton
+                    isEmailChecked={isEmailChecked}
+                    setEmailChecked={setEmailChecked}
+                    isPending={isPending}
+                  />
+                </div>
               </FormControl>
               <FormMessage />
+              {!errors.email && isEmailChecked && (
+                <p className="text-sm text-emerald-500">
+                  사용 가능한 이메일입니다.
+                </p>
+              )}
+              {email && !errors.email && !isEmailChecked && (
+                <p className="text-sm text-destructive">
+                  이메일 중복체크를 해주세요.
+                </p>
+              )}
             </FormItem>
           )}
         />
@@ -234,7 +271,11 @@ export default function RegisterFrom() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>성별</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={isPending}
+              >
                 <FormControl>
                   <SelectTrigger className="bg-secondary/50 border-white/5">
                     <SelectValue placeholder="선택" />
