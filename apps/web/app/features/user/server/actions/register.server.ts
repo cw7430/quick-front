@@ -12,7 +12,7 @@ import { loginAndRefresh } from './shared.server';
 const { apiPost } = ServerRequest;
 
 export const checkEmail = async (body: CheckEmailRequestDto) => {
-  await apiPost('/email', {}, body);
+  await apiPost('/user/email', {}, body);
 };
 
 export const register = async (body: RegisterRequestDto) => {

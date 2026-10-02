@@ -23,6 +23,9 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   try {
     await checkEmail(parsed.data);
+    return data({
+      success: true as const,
+    });
   } catch (e) {
     if (e instanceof ApiError) {
       return data({

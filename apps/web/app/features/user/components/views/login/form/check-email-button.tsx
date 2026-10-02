@@ -1,6 +1,7 @@
 import { useEffect, type SetStateAction } from 'react';
 import { useFetcher } from 'react-router';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { Loader2 } from 'lucide-react';
 import { ResponseCode } from '@repo/shared-constants/api';
 
 import type { action } from '@/routes/_api/check-email';
@@ -19,6 +20,7 @@ export default function CheckEmailButton({
   isPending,
 }: Props) {
   const fetcher = useFetcher<typeof action>();
+  const isEmailCheckPending = fetcher.state !== 'idle';
 
   const { control, setError, clearErrors, trigger } =
     useFormContext<RegisterRequestDto>();
@@ -88,8 +90,9 @@ export default function CheckEmailButton({
       variant="outline"
       className="shrink-0 px-4 border-primary/30 text-primary hover:bg-primary/10 hover:border-primary"
       onClick={onClick}
-      disabled={isEmailChecked || isPending}
+      disabled={isEmailChecked || isPending || isEmailCheckPending}
     >
+      {isEmailCheckPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
       중복체크
     </Button>
   );

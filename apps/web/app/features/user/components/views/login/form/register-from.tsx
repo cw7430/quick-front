@@ -26,12 +26,10 @@ import {
 } from '@/shared/components/ui/shadcn/form';
 import { Input } from '@/shared/components/ui/shadcn/input';
 import {
-  Select,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-} from '@/shared/components/ui/shadcn/select';
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from '@/shared/components/ui/shadcn/tabs';
 import { Button } from '@/shared/components/ui/shadcn/button';
 import CheckEmailButton from './check-email-button';
 
@@ -44,6 +42,7 @@ export default function RegisterFrom() {
   const isPending = fetchers.some(
     (f) => f.formAction === '/register' || f.formAction === '/check-email',
   );
+  const isRegisterPending = fetcher.state !== 'idle';
 
   const login = useAuthStore((s) => s.login);
 
@@ -271,21 +270,20 @@ export default function RegisterFrom() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>성별</FormLabel>
-              <Select
+              <Tabs
+                value={field.value}
                 onValueChange={field.onChange}
-                defaultValue={field.value}
-                disabled={isPending}
+                className="w-full"
               >
-                <FormControl>
-                  <SelectTrigger className="bg-secondary/50 border-white/5">
-                    <SelectValue placeholder="선택" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="M">남성</SelectItem>
-                  <SelectItem value="F">여성</SelectItem>
-                </SelectContent>
-              </Select>
+                <TabsList className="grid w-full grid-cols-2 bg-secondary/50">
+                  <TabsTrigger value="M" disabled={isPending}>
+                    남성
+                  </TabsTrigger>
+                  <TabsTrigger value="F" disabled={isPending}>
+                    여성
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
               <FormMessage />
             </FormItem>
           )}
@@ -300,7 +298,9 @@ export default function RegisterFrom() {
           className="w-full h-11 bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 mt-2"
           disabled={isPending}
         >
-          {isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+          {isRegisterPending && (
+            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+          )}
           회원가입
         </Button>
       </form>
