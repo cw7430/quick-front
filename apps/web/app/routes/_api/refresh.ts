@@ -10,7 +10,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const body = { isAuto: formData.get('isAuto') === 'true' };
 
   try {
-    const { data: loginData, headers } = await refresh(body);
+    const { data: loginData, headers } = await refresh(request, body);
 
     return data(
       {

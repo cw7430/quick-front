@@ -3,6 +3,7 @@ import { Outlet, redirect } from 'react-router';
 import type { Route } from './+types/layout';
 import { getTokenCookies } from '@/shared/lib/server';
 import { AuthInitalizer } from '@/features/user/components/layouts';
+import { Header } from '@/shared/components/layouts';
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const cookies = await getTokenCookies(request);
@@ -25,6 +26,7 @@ export default function UserLayout({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <AuthInitalizer hasAccessToken={hasAccessToken} />
+      <Header />
       <Outlet />
     </>
   );
