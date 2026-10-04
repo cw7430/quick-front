@@ -24,10 +24,26 @@ export default function UserLayout({ loaderData }: Route.ComponentProps) {
   const { hasAccessToken } = loaderData;
 
   return (
-    <>
+    <div className="relative isolate min-h-dvh bg-background">
       <AuthInitalizer hasAccessToken={hasAccessToken} />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 bg-linear-to-b from-violet-500/5 to-transparent"
+      />
       <Header />
-      <Outlet />
-    </>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-60 focus:rounded-lg focus:bg-card focus:px-4 focus:py-2 focus:text-foreground"
+      >
+        본문으로 바로가기
+      </a>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto w-full max-w-7xl px-4 py-8 outline-none sm:px-6 sm:py-10 lg:px-8"
+      >
+        <Outlet />
+      </main>
+    </div>
   );
 }
