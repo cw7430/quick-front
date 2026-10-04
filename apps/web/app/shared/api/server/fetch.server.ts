@@ -7,17 +7,25 @@ import {
   type ContentType,
 } from '@repo/shared-api/fetch';
 import { ResponseCode } from '@repo/shared-constants/api';
+import type { DistributiveOmit } from '@tanstack/react-query';
 
 import { getTokenCookies } from '@/shared/lib/server';
 
 export type AuthType = 'access' | 'refresh' | 'none';
 
-interface FetchOptions extends RequestInit {
-  request?: Request;
-  baseUrl?: string;
-  authType?: AuthType;
-  contentType?: ContentType;
-}
+type FetchOptions =
+  | (RequestInit & {
+      request?: Request;
+      baseUrl?: string;
+      authType?: 'none';
+      contentType?: ContentType;
+    })
+  | (RequestInit & {
+      request: Request;
+      baseUrl?: string;
+      authType: Exclude<AuthType, 'none'>;
+      contentType?: ContentType;
+    });
 
 const API_URL = process.env.API_URL!;
 const API_KEY = process.env.API_KEY!;
@@ -100,7 +108,7 @@ const serverFetch = async <T>(
 export const ServerRequest = {
   apiGet: async <T>(
     input: string,
-    options?: Omit<FetchOptions, 'contentType'>,
+    options?: DistributiveOmit<FetchOptions, 'contentType'>,
     params?: Record<string, string | number | boolean | undefined>,
   ): Promise<T> => {
     const query = resolveQuery(params);
@@ -155,7 +163,7 @@ export const ServerRequest = {
 
   apiDelete: async <T = void>(
     input: string,
-    options?: Omit<FetchOptions, 'contentType'>,
+    options?: DistributiveOmit<FetchOptions, 'contentType'>,
   ): Promise<T> => {
     return serverFetch<T>(input, {
       method: 'DELETE',

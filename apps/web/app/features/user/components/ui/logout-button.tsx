@@ -45,6 +45,7 @@ export default function LogoutButton() {
       className="text-muted-foreground hover:text-destructive transition-colors"
       onClick={onClick}
       disabled={isPending}
+      aria-label="로그아웃"
     >
       <LogOut className="w-5 h-5" />
     </Button>
